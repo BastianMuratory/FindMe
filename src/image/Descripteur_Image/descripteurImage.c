@@ -230,7 +230,7 @@ DescripteurImage creerDescripteurImage(char nomDuFichier[100],int nombre_bits,in
 	
 	d.ID = ID;
 	strcpy(d.nom,nomDuFichier);
-	
+	d.nombre_bits = nombre_bits;
 
 	//Debut lecture du fichier
 	int nmColone=0,nmLigne=0,Composante=0;
@@ -327,10 +327,11 @@ int setValueDescripteurImage(DescripteurImage* pointeur_d,int x){
 }
 
 //affectation et affichage
-void affectDescripteurImage(DescripteurImage* e1,DescripteurImage* e2,int nmBits){
+void affectDescripteurImage(DescripteurImage* e1,DescripteurImage* e2){
 	e2->ID = e1->ID;
+	e2->nombre_bits = e1->nombre_bits;
 	strcpy(e2->nom,e1->nom);
-	e2->histogramme = init_Histo(e1->histogramme.couleur,nmBits);
+	e2->histogramme = init_Histo(e1->histogramme.couleur,e1->nombre_bits);
 	for(int i = 0;i< e1->histogramme.taille;i++){
 		e2->histogramme.histo[i] = e1->histogramme.histo[i];
 	}
@@ -338,47 +339,17 @@ void affectDescripteurImage(DescripteurImage* e1,DescripteurImage* e2,int nmBits
 
 
 void afficheDescripteurImage(DescripteurImage d){
-	printf("[Image = %s | ID = %d]",d.nom,d.ID);
+	printf("[Image=%s | ID=%d | n_bits=%d ]",d.nom,d.ID,d.nombre_bits);
 	affiche_Histo(d.histogramme);
 }
 
+// fonction utilisée dans le calcul de distance 
 int min(int a,int b){
 	if(a<b){
 		return a;
 	}
 	return b;
 }
-
-// calcul ancienne distance 
-/*
-int distanceDescripteurImage(DescripteurImage d1,DescripteurImage d2){
-	int distance = 0;
-	int val = 0;
-	if(d1.histogramme.couleur){
-		if(d2.histogramme.couleur){
-			for(int i =0;i<d1.histogramme.taille;i++){
-				//val = abs(d1.histogramme.histo[i]-d2.histogramme.histo[i]);
-				val = min(d1.histogramme.histo[i],d2.histogramme.histo[i]);
-				distance+= val*val;
-			}
-		}else{
-			return -1;
-		}
-	}else{
-		if(!(d2.histogramme.couleur)){
-			for(int i =0;i<d1.histogramme.taille;i++){
-				//val = abs(d1.histogramme.histo[i]-d2.histogramme.histo[i]);
-				val = min(d1.histogramme.histo[i],d2.histogramme.histo[i]);
-				distance+= val;
-			}
-		}else{
-			return -1;
-		}
-	}
-	
-	return distance;
-};*/
-
 
 int distanceDescripteurImage(DescripteurImage d1,DescripteurImage d2){
 	int distance = 0;
@@ -388,7 +359,6 @@ int distanceDescripteurImage(DescripteurImage d1,DescripteurImage d2){
 	}
 	if(d1.histogramme.couleur == d2.histogramme.couleur){
 		for(int i =0;i<d1.histogramme.taille;i++){
-				//val = abs(d1.histogramme.histo[i]-d2.histogramme.histo[i]);
 				val = min(d1.histogramme.histo[i],d2.histogramme.histo[i]);
 				distance+= val;
 			}
@@ -402,7 +372,7 @@ int distanceDescripteurImage(DescripteurImage d1,DescripteurImage d2){
 
 //sauvegarde un descripteur dans un fichier pour la sauvegarde
 int sauvegarderDescripteurImage(FILE* fichier,DescripteurImage d){
-	fprintf(fichier,"%d,%s\n",d.ID,d.nom);
+	fprintf(fichier,"%d,%d,%s\n",d.ID,d.nombre_bits,d.nom);
 	if(d.histogramme.couleur){
 		fprintf(fichier,"1 %d\n",d.histogramme.taille);
 	}else{
@@ -419,7 +389,7 @@ int sauvegarderDescripteurImage(FILE* fichier,DescripteurImage d){
 DescripteurImage chargerDescripteurImage(FILE* fichier){
 	DescripteurImage d;
 	int boole;
-	fscanf(fichier, "%d,%s\n",&d.ID,d.nom);
+	fscanf(fichier, "%d,%d,%s\n",&d.ID,&d.nombre_bits,d.nom);
 	fscanf(fichier, "%d %d\n",&boole,&d.histogramme.taille);
 	if(boole){
 		d.histogramme.couleur = true;

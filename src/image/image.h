@@ -21,7 +21,7 @@ typedef struct s_pileDescripteurImage{
 // initialise une pile vide
 PileDescripteurImage initPileDescripteurImage();
 //empile le descripteur Image passé en paramètre
-PileDescripteurImage empileDescripteurImage(PileDescripteurImage,DescripteurImage,int n_bits);
+PileDescripteurImage empileDescripteurImage(PileDescripteurImage,DescripteurImage);
 //depile le premier descripteur de la pile
 PileDescripteurImage depileDescripteurImage(PileDescripteurImage);
 
@@ -45,6 +45,6 @@ int toutDescripteurImage(char* nomDuFichier,PileDescripteurImage* p,PileLien* l,
 */
 int SauvegardePileDescripteurImage(PileDescripteurImage p,PileLien l);
 // charge une pile de descripteur depuis le fichier base_descripteur_image
-PileDescripteurImage chargePileDescripteurImage(int n_bits,int* id);
+PileDescripteurImage chargePileDescripteurImage(int* id);
 
 #endif

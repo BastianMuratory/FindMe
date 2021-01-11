@@ -35,9 +35,10 @@ DescripteurAudio creerDescripteurAudioBin(char nomDuFichier[50],int nombreDesInt
 	  d.ID = id; // mise a jour de l'id
     d.nombreDesIntervalles = nombreDesIntervalles;
   	d.tailleDuDescripteur = 0;
-		//puts("A");
+
     char maCommande[80] = "wc -l ../../../data/TEST_SON/";
-	  strcat(maCommande,d.nom);
+	  strcat(maCommande,d.nom); 
+    //   ./data/TEST_SON/ --> pour compiler depuis le main
 
     //Creation d'un nouveau fichier binaire
     strcat(maCommande," > fbin");
@@ -186,7 +187,7 @@ DescripteurAudio creerDescripteurAudioBin(char nomDuFichier[50],int nombreDesInt
 	puts("I");
 
   // Affichage de la taille d'histogramme
-  //printf("\nTaille du descripteur %s = %d par %d\n", d.nom, d.tailleDuDescripteur,d.nombreDesIntervalles);
+  printf("\nTaille du descripteur %s = %d par %d\n", d.nom, d.tailleDuDescripteur,d.nombreDesIntervalles);
   fclose(ficbin2);
 
 	return d;

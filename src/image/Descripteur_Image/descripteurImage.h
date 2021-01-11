@@ -14,6 +14,7 @@ typedef struct s_Histo{
 // structure du descripteur image 
 typedef struct s_DescripteurImage{
 	int ID; // id du descripteur
+	int nombre_bits; // nombre de bits utilisées pour la quatification
 	char nom[50]; // nom du fichier décrit
 	Histo histogramme; // histogramme
 }DescripteurImage;
@@ -26,7 +27,7 @@ char* getNomDescripteurImage(DescripteurImage d);
 int setIdDescripteurImage(DescripteurImage* pointeur_d,int x);
 
 //affectation pour permettre l'empilement dans la pile 
-void affectDescripteurImage(DescripteurImage* source,DescripteurImage* destination,int nBits);
+void affectDescripteurImage(DescripteurImage* source,DescripteurImage* destination);
 
 // Affichage du descripteur audio (utilisé le plus souvent lors des tests)
 void afficheDescripteurImage(DescripteurImage d);

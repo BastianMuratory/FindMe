@@ -113,7 +113,7 @@ int rechercher_image(PileDescripteurImage* p,PileLien* l,int nBits,int n_resulta
 	// fichier déjà dans la base de donnée ou ajouté par l'utilisateur
 	DescripteurImage fichier_recherche;
 	if(dejaVu(nom,*l)>=0){
-		affectDescripteurImage(getDescripteurImageViaNom(*p,nom),&fichier_recherche,nBits);
+		affectDescripteurImage(getDescripteurImageViaNom(*p,nom),&fichier_recherche);
 	}else{
 		char chemin[100] = "../../Fichier_Recherche/";
 		char chemin_existe[100] = "./Fichier_Recherche/";
@@ -164,27 +164,38 @@ int rechercher_image(PileDescripteurImage* p,PileLien* l,int nBits,int n_resulta
 
 	printf("Les fichiers ressemblants sont :\n");
 	int min;
-	//int idmin;
+	//int id_fichier_a_ouvrir = -1;
+	int nombre_fichiers_trouves = 0;
 	int indexe;
 	for(int j = 0;j<n_resultats;j++){ // boucle sur le nombre de resultats définis
 		min = -1;
-		//idmin = -1;
 		indexe = -1;
 		for(int i = 0;i<p->taille;i++){ // boucle sur toutes les distances
-			if(di[i]>-1 && (min == -1 || di[i]>min) ){ // si la distance est valide et que soit aucune distances n'a été trouvée
+			if(di[i]>-1 && (min == -1 || di[i]>min) ){ // si la distance est valide et que aucune distances n'a été trouvée
 				min = di[i];
-				//idmin = id[i];
 				indexe = i;
 			}
 		}
-		//
-		// ATTENTION J'avais un problème avec une confusion entre IDmin et INDEXE
-		// JE l'ai corrigée ... enfin je crois 
-		// Mais elle n'est pas testées donc peut-etre qu'il y a encore un problème
-		printf("[%d] %s ressemblance = %d\n",j+1,getNomDescripteurImage(*getDescripteurImageViaId(*p,id[indexe])),di[indexe]);
-		//printf("[%d] différence = %d\n",j,di[indexe]);
+
+		if(min!=0){
+			nombre_fichiers_trouves++;
+			printf("[%d] %s ressemblance = %d\n",j+1,getNomDescripteurImage(*getDescripteurImageViaId(*p,id[indexe])),di[indexe]);
 		di[indexe] = -1;
+		}
+		
 	}
+	/*
+	if(nombre_fichiers_trouves==0){
+		printf("\nAucun fichier dans la base de donnée contient le mot : %s\n",motLu);
+		puts("Vous pouvez essayer de demander à l'administrateur de relancer une indexation avec plus de mots");
+	} else {
+    char commande[100] = "cat ";
+    char* nom_fichier_a_ouvrir = getNomDescripteurTexte(*getDescripteurTexteViaId(*p,id[id_fichier_a_ouvrir]));
+		char chemin[100] = "./data/Textes/";
+    strcat(commande, chemin);
+		strcat(commande,nom_fichier_a_ouvrir);
+		system(commande);
+  }*/
 
 	free(id);
 	free(di);
@@ -219,9 +230,9 @@ int indexation_fichiers_audio(PileDescripteurAudio* p,PileLien* l,int nombreDesI
 	fichier = fopen("tempSON2","r");
 	fscanf(fichier,"%d",&max);
 	fclose(fichier);
-	printf("============================\n");
-	printf("Il y a %d fichiers à indexer\n",max);
-	printf("============================\n");
+	//printf("============================\n");
+	//printf("Il y a %d fichiers à indexer\n",max);
+	//printf("============================\n");
 
 	// indexation de chacun de ces fichiers
 	char fichierCourant[50];
@@ -353,7 +364,7 @@ int rechercher_audio(PileDescripteurAudio* p,PileLien* l,int nombreDesIntervales
 	}
 
   // affichage de fichier audio
-  bool ouverture = false;
+  /* bool ouverture = false;
   char* ouiNON;
   ouiNON = "non";
   do {
@@ -371,6 +382,7 @@ int rechercher_audio(PileDescripteurAudio* p,PileLien* l,int nombreDesIntervales
     // commande "play" --> lancer le fichier
     // trim
   }
+  */
   // ********************
 
 // 2 memes fichiers (verification du nom) : distance negative, distance a 100%
@@ -614,6 +626,9 @@ int rechercher_mots_texte(PileDescripteurTexte* p,int n_resultats){
 		di[i] = distance;
 		id[i] = getIdDescripteurTexte(*autre_desc);
 	}
+	
+
+
 	puts("");
 
 	printf("Les fichiers contenant le mot :%s\n",mot);
@@ -621,6 +636,7 @@ int rechercher_mots_texte(PileDescripteurTexte* p,int n_resultats){
 	//int idmin;
 	int indexe;
 	int nombre_fichiers_trouves =0;
+  int id_fichier_a_ouvrir = -1;
 	for(int j = 0;j<n_resultats;j++){ // boucle sur le nombre de resultats définis
 		min = -1;
 		//idmin = -1;
@@ -630,6 +646,9 @@ int rechercher_mots_texte(PileDescripteurTexte* p,int n_resultats){
 				min = di[i];
 				//idmin = id[i];
 				indexe = i;
+        if(id_fichier_a_ouvrir != -1) {
+          id_fichier_a_ouvrir = i;
+        }
 			}
 		}
 		
@@ -643,7 +662,14 @@ int rechercher_mots_texte(PileDescripteurTexte* p,int n_resultats){
 	if(nombre_fichiers_trouves==0){
 		printf("\nAucun fichier dans la base de donnée contient le mot : %s\n",motLu);
 		puts("Vous pouvez essayer de demander à l'administrateur de relancer une indexation avec plus de mots");
-	}
+	} else {
+    char commande[100] = "cat ";
+    char* nom_fichier_a_ouvrir = getNomDescripteurTexte(*getDescripteurTexteViaId(*p,id[id_fichier_a_ouvrir]));
+		char chemin[100] = "./data/Textes/";
+    strcat(commande, chemin);
+		strcat(commande,nom_fichier_a_ouvrir);
+		system(commande);
+  }
 
 
 	free(id);

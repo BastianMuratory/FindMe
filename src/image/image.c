@@ -5,10 +5,10 @@
 
 #include "./image.h"
 
-CelluleImage* initCelImage(DescripteurImage el,int n_bits){
+CelluleImage* initCelImage(DescripteurImage el){ // nbits sert a rien
 	CelluleImage* c = (CelluleImage*)malloc(sizeof(CelluleImage));
 	c->suivant = NULL;
-	affectDescripteurImage(&el,&(c->descripteur),n_bits);
+	affectDescripteurImage(&el,&(c->descripteur));
 	return c;
 }
 
@@ -19,8 +19,8 @@ PileDescripteurImage initPileDescripteurImage(){
 	return p;
 }
 
-PileDescripteurImage empileDescripteurImage(PileDescripteurImage p,DescripteurImage d,int n_bits){
-	CelluleImage* c = initCelImage(d,n_bits);
+PileDescripteurImage empileDescripteurImage(PileDescripteurImage p,DescripteurImage d){
+	CelluleImage* c = initCelImage(d);
 	if(p.taille!=0){
 		c->suivant = p.tete;
 	}
@@ -135,10 +135,10 @@ void freePileDescripteurImage(PileDescripteurImage* p){
 }
 
 
-int toutDescripteurImage(char* nomDuFichier,PileDescripteurImage* p,PileLien* l,int bitFort, int ID){
-	DescripteurImage desc = creerDescripteurImage(nomDuFichier,bitFort,ID);
+int toutDescripteurImage(char* nomDuFichier,PileDescripteurImage* p,PileLien* l,int n_bits, int ID){
+	DescripteurImage desc = creerDescripteurImage(nomDuFichier,n_bits,ID);
 	Lien lien = creerLien(desc.nom,desc.ID);
-	*p = empileDescripteurImage(*p, desc,bitFort);
+	*p = empileDescripteurImage(*p, desc);
 	*l = empileLien(*l, lien);
 	return EXIT_SUCCESS;
 }
@@ -172,7 +172,7 @@ int SauvegardePileDescripteurImage(PileDescripteurImage p,PileLien l){
 }
 
 // charge un descripteur depuis un fichier
-PileDescripteurImage chargePileDescripteurImage(int n_bits,int*id){
+PileDescripteurImage chargePileDescripteurImage(int*id){
   int pourcentage;
 	FILE* fichier = NULL;
 	// Sauvegarde de la Pile de descripteurs
@@ -187,7 +187,8 @@ PileDescripteurImage chargePileDescripteurImage(int n_bits,int*id){
 	*id = taille;
 	printf("\x1b[33m");
 	for(int i =0;i<taille;i++){
-		p = empileDescripteurImage(p,chargerDescripteurImage(fichier),n_bits);
+		DescripteurImage d = chargerDescripteurImage(fichier);
+		p = empileDescripteurImage(p,d);
     pourcentage = ((i+1)*100)/taille;
     printProgressBar(pourcentage);
     fflush(stdout);

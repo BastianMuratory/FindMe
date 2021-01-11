@@ -13,7 +13,7 @@
 //#include "src/recherche/recherche.c"
 
 int main(void) {
-	//system("clear"); // nettoyage du terminal
+	system("clear"); // nettoyage du terminal
 
 	//===========
 	// Variables
@@ -37,7 +37,7 @@ int main(void) {
 
 	// Nombre de résultats à afficher suite à une recherche 
 	int nombre_resultats_texte = 10;
-	int nombre_resultats_image = 4;
+	int nombre_resultats_image = 10;
 	int nombre_resultats_audio = 2; //nombre des fichiers dans la base de données - 1
 
 
@@ -74,7 +74,7 @@ int main(void) {
   
 	idImage = 0;
 	puts("Chargement des fichiers image");
-	pile_descripteur_image = chargePileDescripteurImage(derniere_ind_image,&idImage);
+	pile_descripteur_image = chargePileDescripteurImage(&idImage);
 	Liens_Image = chargePileLien("./sauvegarde/Descripteur_image/liste_base_image");
 
 	idTexte = 0;
@@ -83,7 +83,7 @@ int main(void) {
 	Liens_Texte = chargePileLien("./sauvegarde/Descripteur_texte/liste_base_texte");
 
 
-	//affichePileDescripteurImage(pile_descripteur_image);
+	//7affichePileDescripteurImage(pile_descripteur_image);
 	//affichePileLien(Liens_Image);
 
 	//affichePileDescripteurAudio(pile_descripteur_audio);

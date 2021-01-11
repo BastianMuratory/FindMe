@@ -124,15 +124,15 @@ void affichePileDescripteurAudio(PileDescripteurAudio p){
 }
 
 void freePileDescripteurAudio(PileDescripteurAudio* p){
-	printf("p->taille = %d\n",p->taille);
+	//printf("p->taille = %d\n",p->taille);
 	int nombre = p->taille;
 	if(nombre >0){
 		for(int i =0;i<nombre;i++){
 			*p = depileDescripteurAudio(*p);
 		}
-		puts("\nPile detruite\n");
+		//puts("\nPile detruite\n");
 	}else{
-		puts("\nPile deja vide\n");
+		//puts("\nPile deja vide\n");
 	}
 }
 

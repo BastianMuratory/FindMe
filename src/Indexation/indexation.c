@@ -364,25 +364,21 @@ int rechercher_audio(PileDescripteurAudio* p,PileLien* l,int nombreDesIntervales
 	}
 
   // affichage de fichier audio
-  /* bool ouverture = false;
-  char* ouiNON;
-  ouiNON = "non";
-  do {
-    printf("Voulez vous écouter le fichier audio %s ? [oui/non]\n", getNomDescripteurAudio(*getDescripteurAudioViaId(*p, id[0])));
-    scanf("%s", ouiNON);
-  } while (strcmp(ouiNON, "oui") || strcmp(ouiNON, "Oui") || strcmp(ouiNON, "OUI") || strcmp(ouiNON, "non") || strcmp(ouiNON, "Non") || strcmp(ouiNON, "NON"));
-
-  if (strcmp(ouiNON, "oui") || strcmp(ouiNON, "Oui") || strcmp(ouiNON, "OUI"))
-    ouverture = true;
-  else 
-    ouverture = false;
-
+  // a corriger!!!!!!
+  bool ouverture = true;
+  char commandeAfficherAudio[80] = "play ./data/TEST_SON/";
+  int lenghtNom = strlen(getNomDescripteurAudio(*getDescripteurAudioViaId(*p,id[indexe])));
+  //for (int i=0; i< lenghtNom-3; i++){
+    //strcat(commandeAfficherAudio, getNomDescripteurAudio(*getDescripteurAudioViaId(*p,id[indexe]))[i]);
+  //}
+  strcat(commandeAfficherAudio,".wav");
   if (ouverture){
-    puts("Afficher des fichiers ici...");
+    //printf("\nCommande qu'on passera au system : %s\n", commandeAfficherAudio);
+    //system(commandeAfficherAudio);
     // commande "play" --> lancer le fichier
     // trim
   }
-  */
+  
   // ********************
 
 // 2 memes fichiers (verification du nom) : distance negative, distance a 100%
@@ -646,7 +642,7 @@ int rechercher_mots_texte(PileDescripteurTexte* p,int n_resultats){
 				min = di[i];
 				//idmin = id[i];
 				indexe = i;
-        if(id_fichier_a_ouvrir != -1) {
+        if(j == 0) {
           id_fichier_a_ouvrir = i;
         }
 			}
@@ -668,6 +664,7 @@ int rechercher_mots_texte(PileDescripteurTexte* p,int n_resultats){
 		char chemin[100] = "./data/Textes/";
     strcat(commande, chemin);
 		strcat(commande,nom_fichier_a_ouvrir);
+		printf("\nAffichage de %s\n",getNomDescripteurTexte(*getDescripteurTexteViaId(*p,id[id_fichier_a_ouvrir])));
 		system(commande);
   }
 

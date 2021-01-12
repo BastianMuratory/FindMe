@@ -110,11 +110,10 @@ void affichePileDescripteurImage(PileDescripteurImage p){
 
 // modifiée
 PileDescripteurImage depileDescripteurImage(PileDescripteurImage p){
-	if(p.taille==0){
-		//puts("Erreur : votre pile est déjà vide !");
-	}else{
+	if(p.taille!=0){
 		CelluleImage* cel = p.tete;
 		p.tete = p.tete->suivant;
+		freeDescripteurImage(&(cel->descripteur));
 		free(cel);
 		p.taille--;
 	}
@@ -122,15 +121,11 @@ PileDescripteurImage depileDescripteurImage(PileDescripteurImage p){
 }
 
 void freePileDescripteurImage(PileDescripteurImage* p){
-	//printf("p->taille = %d\n",p->taille);
 	int nombre = p->taille;
 	if(nombre >0){
 		for(int i =0;i<nombre;i++){
 			*p = depileDescripteurImage(*p);
 		}
-		//puts("Pile Descripteur image vidée");
-	}else{
-		//puts("Pile deja vide");
 	}
 }
 

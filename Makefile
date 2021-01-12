@@ -53,4 +53,4 @@ indexation.o: src/Indexation/indexation.c src/Indexation/indexation.h
 	gcc -o $(O)indexation.o -c -Wall src/Indexation/indexation.c
 
 clean:
-	rm $(O)*.o
+	rm $(O)*.o Temp tempSON2

@@ -7,7 +7,7 @@
 #include "indexation.h"
 
 
-
+// fonction permettant de changer la couleur du terminal
 void couleur(char* couleur){
 	if(strcmp(couleur,"noir")==0){
 		printf("\x1b[30m");
@@ -30,7 +30,7 @@ void couleur(char* couleur){
 	}
 }
 
-
+// Fonction d'affichage de l'eereur dans le cas le nom de fichier entré par l'utilisateur est incorrecte
 void error(){
 	couleur("rouge");
 	puts("======================================================");
@@ -42,8 +42,7 @@ void error(){
 }
 
 int indexation_fichiers_images(PileDescripteurImage* p,PileLien* l,int nmb_bits,int* ID){
-  int pourcentage;
-	
+  int pourcentage = 0; // affichage de la barre de chargement 
 	// vider la pile si elle est deja remplie
 	if(p->taille > 0){
 		freePileDescripteurImage(p);
@@ -100,7 +99,9 @@ int indexation_fichiers_images(PileDescripteurImage* p,PileLien* l,int nmb_bits,
 
 int rechercher_image(PileDescripteurImage* p,PileLien* l,int nBits,int n_resultats){
 	bool ajout_par_utilisateur = false;
+	int id_fichier_a_ouvrir = -1;
 	char nom[100];
+
 	printf("Entrez le nom de votre fichier :");
 	scanf("%s",nom);
 	strcat(nom,".txt");
@@ -174,28 +175,33 @@ int rechercher_image(PileDescripteurImage* p,PileLien* l,int nBits,int n_resulta
 			if(di[i]>-1 && (min == -1 || di[i]>min) ){ // si la distance est valide et que aucune distances n'a été trouvée
 				min = di[i];
 				indexe = i;
+				if(j == 0) {
+          id_fichier_a_ouvrir = i;
+        }
 			}
 		}
 
 		if(min!=0){
-			nombre_fichiers_trouves++;
-			printf("[%d] %s ressemblance = %d\n",j+1,getNomDescripteurImage(*getDescripteurImageViaId(*p,id[indexe])),di[indexe]);
+			char nom_sans_extension[10] = "";
+			strncat(nom_sans_extension,getNomDescripteurImage(*getDescripteurImageViaId(*p,id[indexe])),strlen(getNomDescripteurImage(*getDescripteurImageViaId(*p,id[indexe])))-4);
+			printf("[%d] %s ressemblance = %d\n",j+1,nom_sans_extension,di[indexe]);
 		di[indexe] = -1;
 		}
-		
 	}
-	/*
-	if(nombre_fichiers_trouves==0){
-		printf("\nAucun fichier dans la base de donnée contient le mot : %s\n",motLu);
-		puts("Vous pouvez essayer de demander à l'administrateur de relancer une indexation avec plus de mots");
-	} else {
-    char commande[100] = "cat ";
-    char* nom_fichier_a_ouvrir = getNomDescripteurTexte(*getDescripteurTexteViaId(*p,id[id_fichier_a_ouvrir]));
-		char chemin[100] = "./data/Textes/";
-    strcat(commande, chemin);
-		strcat(commande,nom_fichier_a_ouvrir);
-		system(commande);
-  }*/
+
+	char commande[100] = "eog ./data/";
+	if(getDescripteurImageViaId(*p,id[id_fichier_a_ouvrir])->histogramme.couleur){
+		strcat(commande,"TEST_RGB/");
+	}else{
+		strcat(commande,"TEST_NB/");
+	}
+	strncat(commande,getNomDescripteurImage(*getDescripteurImageViaId(*p,id[id_fichier_a_ouvrir])),strlen(getNomDescripteurImage(*getDescripteurImageViaId(*p,id[id_fichier_a_ouvrir])))-3);
+	if(getDescripteurImageViaId(*p,id[id_fichier_a_ouvrir])->histogramme.couleur){
+		strcat(commande,"jpg");
+	}else{
+		strcat(commande,"bmp");
+	}
+	printf("\nCommande = %s\n",commande);
 
 	free(id);
 	free(di);
@@ -254,7 +260,7 @@ int indexation_fichiers_audio(PileDescripteurAudio* p,PileLien* l,int nombreDesI
 	// fermeture des fichier et suppression des fichiers inutiles
 	fclose(fichier);
 	remove("tempSON");
-	remove("tempSON22");
+	remove("tempSON2");
 	return 0;
 }
 
@@ -334,12 +340,13 @@ int rechercher_audio(PileDescripteurAudio* p,PileLien* l,int nombreDesIntervales
   int nb_resultatsAffiches=0;
   int nb_resultatsNegliges=0;
   // boucle sur le nombre de resultats définis + on prend en compte le fichier recherche (on ne l'affiche pas) 
+	static int id_fichier_a_ouvrir;
   while ( (nb_resultatsAffiches+nb_resultatsNegliges)<=n_resultats && (nb_resultatsAffiches+nb_resultatsNegliges)<p->taille){
 	//for(int j = 0 ; (j<n_resultats) && (nb_resultatsAffiches<=(n_resultats-nb_resultatsNegliges)) ;j++){ // boucle sur le nombre de resultats définis
 		min = -1;
 		//idmin = -1;
 		indexe = -1;
-
+		
 		for(int i = 0;i<p->taille;i++){ // boucle sur toutes les distances
 			if(di[i]>=0 && (min == -1 || di[i]<min) ){ // si la distance est valide et que soit aucune distances n'a été trouvée
 				min = di[i];
@@ -347,12 +354,20 @@ int rechercher_audio(PileDescripteurAudio* p,PileLien* l,int nombreDesIntervales
 				indexe = i;
 			}
 		}
+		
     // char* getNomDescripteurAudio(DescripteurAudio d)
     char* nomDescripteurCourant;
     nomDescripteurCourant = getNomDescripteurAudio(*getDescripteurAudioViaId(*p,id[indexe]));
     //printf("Descripteur courant = %s\n",nomDescripteurCourant);
     if (strcmp(nomDescripteurCourant, nom)!=0){
-      printf("[%d] %s différence = %.2f %%  \n",nb_resultatsAffiches+1,getNomDescripteurAudio(*getDescripteurAudioViaId(*p,id[indexe])),di[indexe]);
+			char nom_sans_extension[50] = "";
+      strncat(nom_sans_extension, getNomDescripteurAudio(*getDescripteurAudioViaId(*p,id[indexe])),strlen(getNomDescripteurAudio(*getDescripteurAudioViaId(*p,id[indexe])))-4);
+      printf("[%d] %s : différence = %.2f %%  \n",nb_resultatsAffiches+1,nom_sans_extension,di[indexe]);
+			if(nb_resultatsAffiches==0){
+				id_fichier_a_ouvrir = indexe;
+			}
+      
+      //printf("######### indexe = %d\n######### nom = %s\n", indexe, getNomDescripteurAudio(*getDescripteurAudioViaId(*p,id[indexe])));
       printf("    L'endroit le plus pertinant est : %.2f seconde(s)\n", tableauMeilleurEndroit[indexe]);
       nb_resultatsAffiches++;
     }
@@ -364,20 +379,28 @@ int rechercher_audio(PileDescripteurAudio* p,PileLien* l,int nombreDesIntervales
 	}
 
   // affichage de fichier audio
-  // a corriger!!!!!!
-  bool ouverture = true;
+  //bool ouverture = true;
   char commandeAfficherAudio[80] = "play ./data/TEST_SON/";
-  int lenghtNom = strlen(getNomDescripteurAudio(*getDescripteurAudioViaId(*p,id[indexe])));
-  //for (int i=0; i< lenghtNom-3; i++){
-    //strcat(commandeAfficherAudio, getNomDescripteurAudio(*getDescripteurAudioViaId(*p,id[indexe]))[i]);
-  //}
-  strcat(commandeAfficherAudio,".wav");
-  if (ouverture){
+  int lenghtNom = strlen(getNomDescripteurAudio(*getDescripteurAudioViaId(*p,id_fichier_a_ouvrir)));
+  strncat(commandeAfficherAudio, getNomDescripteurAudio(*getDescripteurAudioViaId(*p,id_fichier_a_ouvrir)),lenghtNom-3);
+  strcat(commandeAfficherAudio,"wav trim ");
+  char result[50]; 
+  float num = tableauMeilleurEndroit[id_fichier_a_ouvrir];
+  int num1 = (int) num/60;
+  int num2 = (int) num;
+  while (num2>=60){
+    num2-=60;
+  }
+  sprintf(result, "%d:%d", (int)num/60, num2); 
+  strcat(commandeAfficherAudio, result);
+	printf("\nExecution de : %s\n",commandeAfficherAudio);
+  // add les minutes:secondes !!!
+  //if (ouverture){
     //printf("\nCommande qu'on passera au system : %s\n", commandeAfficherAudio);
     //system(commandeAfficherAudio);
     // commande "play" --> lancer le fichier
     // trim
-  }
+  //}
   
   // ********************
 

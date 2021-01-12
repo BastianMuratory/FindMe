@@ -13,16 +13,17 @@ int main(int argc, char *argv[]) {
 				int i, j;
 		float *endroitDisntaceMin;
 		puts("TEST 0");
-		DescripteurAudio b = creerDescripteurAudioBin("jingle_fi.bin", 50, 1);
+		DescripteurAudio b = creerDescripteurAudioBin("corpus_fi.bin", 50, 2);
     
     afficheDescripteurAudio(b);
 
 		puts("TEST A");
 		//* ******* TEST DISTANCE ***
 
-		DescripteurAudio a= creerDescripteurAudioBin("corpus_fi.bin", 50, 2);
+		DescripteurAudio a= creerDescripteurAudioBin("jingle_fi.bin", 50, 1);
 		float dist = 0;
     afficheDescripteurAudio(b);
+    afficheDescripteurAudio(a);
 
 		dist = distanceDescripteurAudio(&a, &b, endroitDisntaceMin);
 
@@ -32,6 +33,8 @@ int main(int argc, char *argv[]) {
 		/* ***** Test Sauvgarde et Chargement ******/
 
 		FILE *fichierTest = fopen("essaiBin", "wb"); // w = write
+    //int t = sauvegarderDescripteurAudio(fichierTest, ji);
+		
 
 		int t = sauvegarderDescripteurAudio(fichierTest, a);
 		fclose(fichierTest);
@@ -40,28 +43,28 @@ int main(int argc, char *argv[]) {
     else
       printf("Sauvgarde : NOK\n");
 
-		fichierTest = fopen("Temp", "rb");
+		fichierTest = fopen("essaiBin", "wb");
 		DescripteurAudio nouveau;
 		nouveau = chargerDescripteurAudio(fichierTest);
 		fclose(fichierTest);
 
-		if (nouveau.ID == b.ID)
+		if (a.ID == b.ID)
 			printf("Id : OK\n");
 		else
 			printf("Id : NOK\n");
-		if (strcmp(nouveau.nom, b.nom) == 0)
+		if (strcmp(a.nom, b.nom) == 0)
 			printf("nom : OK\n");
 		else
 			printf("nom : NOK\n");
-		if (nouveau.tailleDuDescripteur == b.tailleDuDescripteur)
+		if (a.tailleDuDescripteur == b.tailleDuDescripteur)
 			printf("tailleDuDescripteur : OK\n");
     else
       printf("tailleDuDescripteur : OK\n");
-		if (nouveau.vectNombre[10] == b.vectNombre[10] && nouveau.vectNombre[101] == b.vectNombre[101])
+		if (a.vectNombre[10] == b.vectNombre[10] && a.vectNombre[101] == b.vectNombre[101])
 			printf("vectNombre : OK\n");
     else
       printf("vectNombre : NOK\n");
-		if (nouveau.vectEndroit[a.tailleDuDescripteur - 10] ==
+		if (a.vectEndroit[a.tailleDuDescripteur - 10] ==
 			b.vectEndroit[b.tailleDuDescripteur - 10])
 			printf("vectEndroit : OK\n");
     else

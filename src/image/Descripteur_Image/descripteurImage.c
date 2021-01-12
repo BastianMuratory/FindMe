@@ -404,8 +404,6 @@ DescripteurImage chargerDescripteurImage(FILE* fichier){
 	return d;
 }
 
-/* Double free quand appele, bizarre ?
-void freeDescripteurImage(DescripteurImage* d){
-	//free(&(d->histogramme.histo));
+void freeDescripteurImage(DescripteurImage* pointeur){
+	free(pointeur->histogramme.histo);
 }
-*/

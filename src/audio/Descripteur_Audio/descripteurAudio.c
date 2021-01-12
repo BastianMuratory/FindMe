@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+//#include <conio.>
 
 #include "descripteurAudio.h"
 
@@ -17,13 +18,19 @@ typedef struct s_DescripteurAudio {
 
 ///Fonction Taille fichier binaire
 unsigned long tailleFichierBin(FILE *ficbin){
+  
 
   fseek(ficbin,0,SEEK_END);
   
   unsigned long  taille= ftell(ficbin);
   
   return taille;
+
 }
+
+
+
+
 
 
 DescripteurAudio creerDescripteurAudioBin(char nomDuFichier[50],int nombreDesIntervalles, int id){
@@ -62,34 +69,25 @@ DescripteurAudio creerDescripteurAudioBin(char nomDuFichier[50],int nombreDesInt
     //puts("C");
     
 	//Taille du fichier.bin
- /*
-  fseek(ficbin,0,SEEK_END);
-  //puts("C1");
-  long  taille= ftell(ficbin);
-  //puts("C2");
-  d.tailleDuDescripteur = taille;
-  printf("taille = %ld\n", taille);*/
-  //puts("C3");
+ 
   
- int nbbloc = tailleFichierBin(ficbin);
+ // d.tailleDuDescripteur= tailleFichierBin(ficbin);
   
-   printf("taille = %d\n",d.tailleDuDescripteur );
+   //printf("taille = %d\n",d.tailleDuDescripteur );
 		
 
   fclose(ficbin); 
   //puts("D");
-  // Reservation de la memoire pour l'histogramme
-
-
+ 
 	//puts("F");
 	//lecture du fichier audio
 	char chemin[80] = "../../../data/TEST_SON/";
 	//system("")
 	strcat(chemin,nomDuFichier);
 
-	FILE* ficbin2 = fopen(chemin,"rb"); // r ou rb ?
+	FILE* ficbin2 = fopen(chemin,"rb"); // 
 
-
+ 
 
 
   // Creation du d.histogramme
@@ -101,31 +99,41 @@ DescripteurAudio creerDescripteurAudioBin(char nomDuFichier[50],int nombreDesInt
 
   puts("L'erreur arrive apres ce puts");
 
-	// 0101 0100 1010 1010 10 01 01 01 010010100100101001
-	//[2][2][2][2][2][2][2][2][2][2][2][2]
-	// 1  1 
-
-	// etape 4 : lecture
-	// il faut savoir comment les données sont organisées ds le fichier 
-	// pour pouvoir les lire par bloc
-	// ici, on choisit : 1 bloc = 10000 int
+	
 
 
-  float tabbin[1000000]; 
+  float tabbin[1000000]; // bloc inconn
 
-
-  int 	nb = fread(tabbin, sizeof(float), 1000000, ficbin2);
+  int 	nb = fread(tabbin, sizeof(float),1000000, ficbin2);
 
 		// la ligne precedente permet de lire le contenu accessible
 		// depuis ficbin par bloc de 10000 int au max
 		// et range cela dans le tableau tabbin
 		// s'il y a moins de 10000 int ds le fichier, alors nb 
 		// contiendra le nb d'int lus
+     // Reservation de la memoire pour l'histogramme
+     d.tailleDuDescripteur=nb;
 
-		printf("nb = %d", nb);
-  //  d.tailleDuDescripteur=nb;
-		// pour savoir si on s'est arrêté sur une erreur ou 
-		// sur la fin du fichier on peut faire :
+  d.histogramme = (int**)malloc(d.tailleDuDescripteur*sizeof(int*));
+	for(i=0; i<d.tailleDuDescripteur; i++){
+		d.histogramme[i] = (int*)malloc(d.nombreDesIntervalles*sizeof(int));
+	}
+
+  // Reservation de la memoire pour vectNombre
+	d.vectNombre = (int*)malloc(d.nombreDesIntervalles*sizeof(int));
+  // initialisation des toutes ses valeurs à 0
+  for(i=0; i<d.nombreDesIntervalles; i++){
+		d.vectNombre[i] = 0;
+	}
+  // Reservation de la memoire pour vectEndroit
+	d.vectEndroit = (int*)malloc(d.tailleDuDescripteur*sizeof(int));
+	// initialisation des toutes ses valeurs à 0
+  for(i=0; i<d.tailleDuDescripteur; i++){
+    d.vectEndroit[i] = 0;
+	}
+
+	//	printf("nb = %d", nb);
+  
 		if (feof(ficbin))
 			printf("\n arret : fin fichier\n") ;
 		if (ferror(ficbin))
@@ -138,12 +146,7 @@ DescripteurAudio creerDescripteurAudioBin(char nomDuFichier[50],int nombreDesInt
 		*/
 
 	
-	printf("taille du desc %d, nombre des intervalles = %d\n",d.tailleDuDescripteur,d.nombreDesIntervalles);
-/*	for(int i = 0;i<nb;i++){
-		printf("tabbin[%d] = %ld\n",i,tabbin[i]);
-	}
-	printf("taille du descripteur=%d",d.tailleDuDescripteur);
-	puts("");*/
+/*	printf("taille du desc %d, nombre des intervalles = %d\n",d.tailleDuDescripteur,d.nombreDesIntervalles);*/
 
   
   for(i=0; i<d.tailleDuDescripteur; i++){
@@ -154,6 +157,9 @@ DescripteurAudio creerDescripteurAudioBin(char nomDuFichier[50],int nombreDesInt
 
     varTemp = tabbin[i]; // ok
    //  printf("ok ok ok %lf\n",varTemp);
+
+
+
 
 
     //printf("i=%d",i);puts("");
@@ -171,7 +177,7 @@ DescripteurAudio creerDescripteurAudioBin(char nomDuFichier[50],int nombreDesInt
 			}else */
 			if (varTemp>borneMin && varTemp<=borneMax){
         d.histogramme[i][j]=1;
-				puts("1");
+			//	puts("1");
         d.vectNombre[j]+=1;
         d.vectEndroit[i]+=j;
         
@@ -187,7 +193,7 @@ DescripteurAudio creerDescripteurAudioBin(char nomDuFichier[50],int nombreDesInt
 	puts("I");
 
   // Affichage de la taille d'histogramme
-  printf("\nTaille du descripteur %s = %d par %d\n", d.nom, d.tailleDuDescripteur,d.nombreDesIntervalles);
+ // printf("\nTaille du descripteur %s = %d par %d\n", d.nom, d.tailleDuDescripteur,d.nombreDesIntervalles);
   fclose(ficbin2);
 
 	return d;
@@ -307,6 +313,7 @@ DescripteurAudio creerDescripteurAudio(char nomDuFichier[50],int nombreDesInterv
   //printf("\nTaille du descripteur %s = %d par %d\n", d.nom, d.tailleDuDescripteur,d.nombreDesIntervalles);
   //fclose(fichier2);
   fclose(fichier);
+  remove("Temp");
 	return d;
 }
 
@@ -441,11 +448,10 @@ void afftest(DescripteurAudio d){
 }
 
 
-
 float distanceDescripteurAudio(DescripteurAudio* d1, DescripteurAudio* d2, float* endroitLePlusPertinant){
   /* initialisation des variables locales */
   int i,j;
-  int n=1024; //n=1024, 2048, 4096 ou 8192 points
+  int n=100; //n=1024, 2048, 4096 ou 8192 points
   int diffEndroit=0;
   int start;
   float endroitDistanceMin;

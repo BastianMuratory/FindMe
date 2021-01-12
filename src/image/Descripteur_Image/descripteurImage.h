@@ -47,7 +47,7 @@ int sauvegarderDescripteurImage(FILE* fichier,DescripteurImage d);
 
 // charge un descripteur depuis un fichier de sauvegarde
 DescripteurImage chargerDescripteurImage(FILE* fichier);
-
+void freeDescripteurImage(DescripteurImage* pointeur);
 
 
 /*=============================

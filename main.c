@@ -36,8 +36,8 @@ int main(void) {
 	int derniere_sauvegarde_audio = 1;
 
 	// Nombre de résultats à afficher suite à une recherche 
-	int nombre_resultats_texte = 10;
-	int nombre_resultats_image = 10;
+	int nombre_resultats_texte = 5;
+	int nombre_resultats_image = 5;
 	int nombre_resultats_audio = 2; //nombre des fichiers dans la base de données - 1
 
 
@@ -256,7 +256,5 @@ int main(void) {
 	}
 	
 	sauvegarde_derniere_indexation(derniere_ind_text,derniere_ind_image,derniere_ind_audio,derniere_sauvegarde_texte,derniere_sauvegarde_image,derniere_sauvegarde_audio);
-
-
   return 0;
 }

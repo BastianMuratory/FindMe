@@ -29,7 +29,7 @@ int main(int argc, char* argv[]){
 	ID++;
 */
 	puts("debut de la sauvegarde");
-	SauvegardePileDescripteurTexte(maPileDescripteurTexte,maPileLienTexte);
+	//SauvegardePileDescripteurTexte(maPileDescripteurTexte,maPileLienTexte);
 	puts("fin de la sauvegarde");
 
 	return EXIT_SUCCESS;

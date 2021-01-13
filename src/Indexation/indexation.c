@@ -120,7 +120,6 @@ int rechercher_image(PileDescripteurImage* p,PileLien* l,int nBits,int n_resulta
 		char chemin_existe[100] = "./Fichier_Recherche/";
 		strcat(chemin,nom);
 		strcat(chemin_existe,nom);
-		
 		if( access( chemin_existe , F_OK ) == 0 ){
 			fichier_recherche = creerDescripteurImage(chemin,nBits,-1);
 			ajout_par_utilisateur = true;
@@ -373,6 +372,9 @@ int rechercher_audio(PileDescripteurAudio* p,PileLien* l,int nombreDesIntervales
     }
     else{
       //printf("\nLe fichier recherche --> %s n'est pas affiche\n\n",nomDescripteurCourant);
+      if(nb_resultatsNegliges==0){
+				id_fichier_a_ouvrir = indexe;
+			}
       nb_resultatsNegliges++;
     }
 		di[indexe] = -1;
@@ -382,19 +384,32 @@ int rechercher_audio(PileDescripteurAudio* p,PileLien* l,int nombreDesIntervales
   //bool ouverture = true;
   char commandeAfficherAudio[80] = "play ./data/TEST_SON/";
   int lenghtNom = strlen(getNomDescripteurAudio(*getDescripteurAudioViaId(*p,id_fichier_a_ouvrir)));
-  strncat(commandeAfficherAudio, getNomDescripteurAudio(*getDescripteurAudioViaId(*p,id_fichier_a_ouvrir)),lenghtNom-3);
-  strcat(commandeAfficherAudio,"wav trim ");
-  char result[50]; 
-  float num = tableauMeilleurEndroit[id_fichier_a_ouvrir];
-  int num1 = (int) num/60;
-  int num2 = (int) num;
-  while (num2>=60){
-    num2-=60;
+    // if nom est conntenue dans base de recherche --> afficher le fichier de base de recherche a partir de 0:0 (car on cherche le meme fichier!)
+  char cheminAudio[80] = "./data/TEST_SON/";
+  strncat(cheminAudio, nom,lenghtNom-3);
+  strcat(cheminAudio,"wav");
+  //printf("cheminAudio = %s\n", cheminAudio);
+  char play[80] = "play ";
+  if (access(cheminAudio, F_OK)==0){
+    //printf("Audio existe dans la base de donnee!\n");
+    // on affiche le meme fichier sans trim
+    strcat(commandeAfficherAudio, getNomDescripteurAudio(*getDescripteurAudioViaId(*p,id_fichier_a_ouvrir)));
+    printf("\nExecution de : %s\n",commandeAfficherAudio);
   }
-  sprintf(result, "%d:%d", (int)num/60, num2); 
-  strcat(commandeAfficherAudio, result);
-	printf("\nExecution de : %s\n",commandeAfficherAudio);
-  // add les minutes:secondes !!!
+  else {
+    strncat(commandeAfficherAudio, getNomDescripteurAudio(*getDescripteurAudioViaId(*p,id_fichier_a_ouvrir)),lenghtNom-3);
+    strcat(commandeAfficherAudio,"wav trim ");
+    char result[50]; 
+    float num = tableauMeilleurEndroit[id_fichier_a_ouvrir];
+    int num1 = (int) num/60;
+    int num2 = (int) num;
+    while (num2>=60){
+      num2-=60;
+    }
+    sprintf(result, "%d:%d", (int)num/60, num2); 
+    strcat(commandeAfficherAudio, result);
+  	printf("\nExecution de : %s\n",commandeAfficherAudio);
+  }
   //if (ouverture){
     //printf("\nCommande qu'on passera au system : %s\n", commandeAfficherAudio);
     //system(commandeAfficherAudio);

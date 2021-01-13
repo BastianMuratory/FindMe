@@ -1,3 +1,5 @@
+# Bastian : Permet de compiler le module image gérant les piles de descripteur et les descripteurs image affin de réaliser des tests unitaires sur la partie image. (Les tests ne fonctionneront probablement plus car les chemins utilisées dans les fonctions sont définis pour fonctionner avec le main ex "./sauvegarde/Base_descripteur_image" au lieu de  "../../sauvegarde/Base_descripteur_image")
+
 f= -Wall -Wextra -g
 
 # Permet de relancer le test directement sans perdre de temps

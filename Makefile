@@ -1,3 +1,4 @@
+# Bastian : Permet de compiler tout les modules et d'exécuter le main, Le clean permet de supprimer les fichiers objets et l'executable
 O = ./Objet/
 
 Objet = $(O)lien.o $(O)liens.o $(O)descripteurAudio.o $(O)audio.o $(O)descripteurTexte.o $(O)texte.o $(O)descripteurImage.o $(O)image.o $(O)main.o $(O)fonction.o $(O)pile_dossier.o $(O)chargement.o $(O)indexation.o
@@ -53,4 +54,4 @@ indexation.o: src/Indexation/indexation.c src/Indexation/indexation.h
 	gcc -o $(O)indexation.o -c -Wall src/Indexation/indexation.c
 
 clean:
-	rm $(O)*.o Temp tempSON2
+	rm $(O)*.o main.exe

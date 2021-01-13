@@ -184,7 +184,7 @@ int main(void) {
 					if(vT == derniere_ind_text){
 						printf("Vous avez déjà indexé les fichiers avec le parramètre %d !\n",vT);
 					}else{
-						printf("Indexation Texte en cour\n");
+						printf("Indexation Texte en cours\n");
 						indexation_fichiers_textes(&pile_descripteur_texte, &Liens_Texte,vT, &idTexte);
 						//affichePileDescripteurTexte(pile_descripteur_texte);
 						derniere_ind_text = vT;
@@ -199,7 +199,7 @@ int main(void) {
 					if(vI == derniere_ind_image){
 						printf("Vous avez déjà indexé les fichiers avec le parramètre %d !\n",vI);
 					}else{
-				  	printf("Indexation Image en cour\n");
+				  	printf("Indexation Image en cours\n");
 						indexation_fichiers_images(&pile_descripteur_image, &Liens_Image ,vI, &	idImage);
 						//affichePileDescripteurImage(pile_descripteur_image);
 						derniere_ind_image = vI;
@@ -214,7 +214,7 @@ int main(void) {
 					if(vA == derniere_ind_audio){
 						printf("Vous avez déjà indexé les fichiers avec le parramètre %d !\n",vA);
 					}else{
-				  	printf("Indexation Audio en cour\n");
+				  	printf("Indexation Audio en cours\n");
 						indexation_fichiers_audio(&pile_descripteur_audio, &Liens_Audio ,vA, &idAudio);
 						derniere_ind_audio = vA;
 						peut_chercher_audio = true;

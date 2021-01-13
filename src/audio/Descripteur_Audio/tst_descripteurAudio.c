@@ -33,16 +33,15 @@ int main(int argc, char *argv[]) {
 		/* ***** Test Sauvgarde et Chargement ******/
 
 		FILE *fichierTest = fopen("essaiBin", "wb"); // w = write
-    //int t = sauvegarderDescripteurAudio(fichierTest, ji);
 		
 
-		int t = sauvegarderDescripteurAudio(fichierTest, a);
+		/*int t = sauvegarderDescripteurAudio(fichierTest, a);
 		fclose(fichierTest);
     if(t==0)
       printf("Sauvgarde : OK\n");
     else
       printf("Sauvgarde : NOK\n");
-
+		*/
 		fichierTest = fopen("essaiBin", "wb");
 		DescripteurAudio nouveau;
 		nouveau = chargerDescripteurAudio(fichierTest);
@@ -270,7 +269,7 @@ int main(int argc, char *argv[]) {
 
 		FILE *fichierTest = fopen("Temp", "w"); // w = write
 
-		int t = sauvegarderDescripteurAudio(fichierTest, ji);
+		//int t = sauvegarderDescripteurAudio(fichierTest, ji);
 		fclose(fichierTest);
 
 		fichierTest = fopen("Temp", "r");

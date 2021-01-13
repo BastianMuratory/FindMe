@@ -1,5 +1,5 @@
 # Bastian : Permet de compiler le module audio gérant les piles de descripteur et les descripteurs audios affin de réaliser des tests unitaires sur la partie audio. (Les tests ne fonctionneront probablement plus car les chemins utilisées dans les fonctions sont définis pour fonctionner avec le main ex "./sauvegarde/Base_descripteur_audio" au lieu de  "../../sauvegarde/Base_descripteur_audio")
-#PS : J'ai eu un problème de commande seulement dans ce makefile, lancer la commande descripteurAudio.o supprimait des fichiers et je n'ai pas réussi à trouver pourquoi. Du coup j'ai écris toutes les commandes dans le run pour permettre à Kosma et Moumouni de pouvoir faire des tests 
+#PS : J'ai eu un problème de commande seulement dans ce makefile, lancer la commande descripteurAudio.o supprimait des fichiers et je n'ai pas réussi à trouver pourquoi. Du coup j'ai écris toutes les commandes dans le run pour permettre à Kosma et Moumouni de pouvoir faire des tests
 f= -Wall -Wextra -g
 
 # Permet de relancer le test directement sans perdre de temps
@@ -51,4 +51,4 @@ liens.o:
 #	Clean
 # =========
 clean:
-	rm -rf *.o test
+	rm -rf *.o test Temp

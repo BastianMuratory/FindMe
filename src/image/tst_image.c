@@ -16,7 +16,7 @@ int main(int argc, char* argv[]){
 	PileDescripteurImage maPileDescripteurImage;
 
 	if(chargement){
-		maPileDescripteurImage = chargePileDescripteurImage(nmb_bits,&id); 
+		maPileDescripteurImage = chargePileDescripteurImage(&id); 
 		maPileLienImage =chargePileLien("../../sauvegarde/Descripteur_image/liste_base_image");
 	}else{
 		PileDescripteurImage maPileDescripteurImage = initPileDescripteurImage();
@@ -38,7 +38,7 @@ int main(int argc, char* argv[]){
 
 	printf("%d id (3 normalement)\n",id);
 	if(sauvegarde){
-		SauvegardePileDescripteurImage(maPileDescripteurImage,maPileLienImage);
+		//SauvegardePileDescripteurImage(maPileDescripteurImage,maPileLienImage);
 	}
 	
 	return EXIT_SUCCESS;

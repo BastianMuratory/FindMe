@@ -165,7 +165,7 @@ int rechercher_image(PileDescripteurImage* p,PileLien* l,int nBits,int n_resulta
 	printf("Les fichiers ressemblants sont :\n");
 	int min;
 	//int id_fichier_a_ouvrir = -1;
-	int nombre_fichiers_trouves = 0;
+	//int nombre_fichiers_trouves = 0;
 	int indexe;
 	for(int j = 0;j<n_resultats;j++){ // boucle sur le nombre de resultats définis
 		min = -1;

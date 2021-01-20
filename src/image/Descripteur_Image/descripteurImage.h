@@ -1,6 +1,8 @@
 #ifndef __DescripteurImage_h__
 #define __DescripteurImage_h__
 
+#define TAILLE_MAX 100
+
 /*
 Structure utilisée dans les descripteurs d'image
 */
@@ -15,7 +17,7 @@ typedef struct s_Histo{
 typedef struct s_DescripteurImage{
 	int ID; // id du descripteur
 	int nombre_bits; // nombre de bits utilisées pour la quatification
-	char nom[50]; // nom du fichier décrit
+	char nom[TAILLE_MAX+1]; // nom du fichier décrit
 	Histo histogramme; // histogramme
 }DescripteurImage;
 

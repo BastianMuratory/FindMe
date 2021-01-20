@@ -192,13 +192,13 @@ Histo add_Image_Coul(Histo h,int R,int G,int B,int nombre_bit){
 
 
 // Creation du descripteur à partir du fichier nomDuFichier en utilisant le nombre de bits forunis par l'administrateur
-DescripteurImage creerDescripteurImage(char nomDuFichier[100],int nombre_bits,int ID){ // int 1 => NB / 0 => Couleure 
+DescripteurImage creerDescripteurImage(char nomDuFichier[TAILLE_MAX+1],int nombre_bits,int ID){ // int 1 => NB / 0 => Couleure 
 	//les deux chemins possibles
 	
-	char image_couleur[100] = "./data/TEST_RGB/";
-	char image_nb[100] = "./data/TEST_NB/";
-	//char image_couleur[100] = "~/FindMe/data/TEST_RGB/";
-	//char image_nb[100] = "~/FindMe/data/TEST_NB/";
+	char image_couleur[TAILLE_MAX+1] = "./data/TEST_RGB/";
+	char image_nb[TAILLE_MAX+1] = "./data/TEST_NB/";
+	//char image_couleur[TAILLE_MAX+1] = "~/FindMe/data/TEST_RGB/";
+	//char image_nb[TAILLE_MAX+1] = "~/FindMe/data/TEST_NB/";
 	//system(image_couleur);
 
 
@@ -316,7 +316,7 @@ int getIdDescripteurImage(DescripteurImage d){
 	return d.ID;
 }
 char* getNomDescripteurImage(DescripteurImage d){
-	char* nom = malloc(100*sizeof(char));
+	char* nom = malloc((TAILLE_MAX+1)*sizeof(char));
 	strcpy(nom,d.nom);
 	return nom;
 }

@@ -1,3 +1,5 @@
+// Bastian : fonctions permettant d'utiliser un lien dans une pile de liens
+// Thomas : Fonction d'affichage de la barre de chargement 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,7 +7,7 @@
 
 #include "./liens.h"
 
-#define tailleMax 50
+
 /*
 typedef struct s_CelExemple{ // le descripteur de Exemple
 	Lien descripteur;
@@ -18,6 +20,7 @@ typedef struct s_pileLien{
 }PileLien;
 */
 
+// fonction quia ffiche la barre de pourcentage 
 void printProgressBar(int pourcentage) {
   int fill_bar = pourcentage/(100/TAILLE_PROGRESS_BAR);
   printf("\r[");
@@ -31,6 +34,7 @@ void printProgressBar(int pourcentage) {
   printf("]%3d%%", pourcentage);
 }
 
+// initialisation de la cellule contenant un Lien pour empilement sur pile  
 CelluleLien* initialiseCellule(Lien el){
 	CelluleLien* c = (CelluleLien*)malloc(sizeof(CelluleLien));
 	c->suivant = NULL;
@@ -38,6 +42,7 @@ CelluleLien* initialiseCellule(Lien el){
 	return c;
 }
 
+// initialise la pile de liens vide
 PileLien initPileLien(){
 	PileLien p;
 	p.taille = 0;
@@ -45,6 +50,7 @@ PileLien initPileLien(){
 	return p;
 }
 
+// empile un lien dans la pile
 PileLien empileLien(PileLien p,Lien d){
 	CelluleLien* c = initialiseCellule(d);
 	if(p.taille!=0){
@@ -55,10 +61,7 @@ PileLien empileLien(PileLien p,Lien d){
 	return p;
 }
 
-
-
-
-// pas besoin de passer un pointeur de pile !!!!!!
+// récupère l'adresse du lien à la position x dans la pile
 Lien* getLien(PileLien p,int x){
 	CelluleLien* courant = p.tete;
 	if(x>p.taille-1){
@@ -72,6 +75,7 @@ Lien* getLien(PileLien p,int x){
 	return &(courant->descripteur);
 }
 
+// récupère l'adresse du lien qui possède l'id id dans la pile
 Lien* getLienViaId(PileLien p,int id){
 	CelluleLien* courant;
 	int i = 0;
@@ -95,6 +99,7 @@ Lien* getLienViaId(PileLien p,int id){
 	return &(courant->descripteur);
 }
 
+// récupère l'adresse du lien qui possède le nom passé en parramètre
 Lien* getLienViaNom(PileLien p,char nom[50]){
 	CelluleLien* courant;
 	int i = 0;
@@ -119,7 +124,7 @@ Lien* getLienViaNom(PileLien p,char nom[50]){
 
 }
 
-
+// affiche une pile de liens 
 void affichePileLien(PileLien p){
 	printf("============================\nPile de [%d] Liens\n",p.taille);
 	CelluleLien* courant;
@@ -174,6 +179,7 @@ void freePileLien(PileLien* p){
 	}
 }
 
+// sauvegarde une pile de liens dans un fichier passé en parramètre
 void sauvegardePileLien(PileLien p,char* nomFichier){
 	FILE* fichier = NULL;
 	fichier = fopen(nomFichier,"w");
@@ -191,6 +197,7 @@ void sauvegardePileLien(PileLien p,char* nomFichier){
 	}
 }
 
+// charge une pile de liens depuis un fichier 
 PileLien chargePileLien(char* nomFichier){
 	FILE* fichier = NULL;
 	PileLien p = initPileLien();
@@ -203,7 +210,7 @@ PileLien chargePileLien(char* nomFichier){
 	fscanf(fichier,"%d\n",&taille);
 	
 	for(int i = 0;i<taille;i++){
-		char nom[tailleMax];
+		char nom[TAILLE_MAX];
 		int id = -1;
 		fscanf(fichier,"ID=%d,NOM=%s\n",&id,nom);
 		Lien l = creerLien(nom,id);

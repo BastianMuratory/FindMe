@@ -39,7 +39,7 @@ void color(char* couleur){
 }
 
 void connection(bool* admin){ // gère la connection au mode administrateur
-	char s[100];
+	char s[TAILLE_MAX+1];
 	printf("Entrez le mdp 'Admin' pour vous connecter : ");
 	scanf("%s",s);
 	clear();
@@ -252,13 +252,11 @@ void message_erreur(){
 }
 
 void changer_param_text(int* param,bool* index){
-	int min = 1;
-	int max = 1000;
 	int x = 0;
 	puts("Le parammètre d'indexation de texte correspond au nombre de mots retenus dans un descripteur de texte.");
-	printf("Veuillez entrer un nombre entre %d et %d : ",min,max);
+	printf("Veuillez entrer un nombre entre %d et %d : ",MIN_INDEXATION_TEXTE,MAX_INDEXATION_TEXTE);
 	scanf("%d",&x);
-	if(x<min || x>max){
+	if(x<MIN_INDEXATION_TEXTE || x>MAX_INDEXATION_TEXTE){
 		message_erreur();
 	}else{
 		*param = x;
@@ -267,13 +265,11 @@ void changer_param_text(int* param,bool* index){
 }
 
 void changer_param_image(int* param,bool* index){
-	int min = 1;
-	int max = 7;
 	int x = 0;
 	puts("Le parammètre d'indexation d'image correspond au nombre de bits pris en compte lors de la quantification."); 
-	printf("Veuillez entrer un nombre entre %d et %d : ",min,max);
+	printf("Veuillez entrer un nombre entre %d et %d : ",MIN_INDEXATION_IMAGE,MAX_INDEXATION_IMAGE);
 	scanf("%d",&x);
-	if(x<min || x>max){
+	if(x<MIN_INDEXATION_IMAGE || x>MAX_INDEXATION_IMAGE){
 		message_erreur();
 	}else{
 		*param = x;
@@ -282,13 +278,11 @@ void changer_param_image(int* param,bool* index){
 }
 
 void changer_param_audio(int* param,bool* index){
-	int min = 10;
-	int max = 250;
 	int x = 0;
 	puts("Le parammètre d'indexation de fichier audio correspond au nombre d'intervales de l'echatillonnage.");
-	printf("Veuillez entrer un nombre entre %d et %d : ",min,max);
+	printf("Veuillez entrer un nombre entre %d et %d : ",MIN_INDEXATION_AUDIO,MAX_INDEXATION_AUDIO);
 	scanf("%d",&x);
-	if(x<min || x>max){
+	if(x<MIN_INDEXATION_AUDIO || x>MAX_INDEXATION_AUDIO){
 		message_erreur();
 	}else{
 		*param = x;

@@ -1,3 +1,12 @@
+// Fatima-Zohra, Moumouni, Kosma, Thomas, Bastian : Dans ce fichier nous avons codé les fonctions qui serviront dans le main affin de réaliser l'indexation des fichiers dans la base de donnée ainsi que les différentes recherches disponible :
+// Fatima-Zohra / Bastian : Indexation et recherche d'image
+// Thomas :
+//
+//
+//
+//
+
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
@@ -102,7 +111,7 @@ int rechercher_image(PileDescripteurImage* p,PileLien* l,int nBits,int n_resulta
 	int id_fichier_a_ouvrir = -1;
 	char nom[100];
 
-	printf("Entrez le nom de votre fichier :");
+	printf("Entrez le nom de votre fichier : ");
 	scanf("%s",nom);
 	strcat(nom,".txt");
 	
@@ -310,12 +319,12 @@ int rechercher_audio(PileDescripteurAudio* p,PileLien* l,int nombreDesIntervales
 			return 2;
 		}
 	}
-	if(ajout_par_utilisateur){
+	/*if(ajout_par_utilisateur){
 		puts("Le fichier est ajoute dans ./Fichier_Recherche");
-	}
-	/*printf("•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••\n");
-	afficheDescripteurAudio(fichier_recherche);
-  printf("\n•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••\n");*/
+	}*/
+	//printf("•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••\n");
+	//afficheDescripteurAudio(fichier_recherche);
+  //printf("\n•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••\n");
 	// calcul des distances 
 	float distance = 0;
 	float meilleurEndroit = -1.0;
@@ -325,8 +334,8 @@ int rechercher_audio(PileDescripteurAudio* p,PileLien* l,int nombreDesIntervales
 	for(int i = 0;i<p->taille;i++){
 		autre_desc = getDescripteurAudio(*p,i);
 		distance = distanceDescripteurAudio(autre_desc, &fichier_recherche, &meilleurEndroit);
-		//printf("distance entre %s et %s = %f %\nmeilleurEndroit = %f seconde(s)\n-----------------------------------------------------------------\n",getNomDescripteurAudio(fichier_recherche),getNomDescripteurAudio(*autre_desc),distance, meilleurEndroit);
-		
+		//printf("distance entre %s et %s = %f %%\nmeilleurEndroit = %f seconde(s)\n-----------------------------------------------------------------\n",getNomDescripteurAudio(fichier_recherche),getNomDescripteurAudio(*autre_desc),distance, meilleurEndroit);
+
 		di[i] = distance;
 		id[i] = getIdDescripteurAudio(*autre_desc);
     tableauMeilleurEndroit[i]=meilleurEndroit;
@@ -347,6 +356,8 @@ int rechercher_audio(PileDescripteurAudio* p,PileLien* l,int nombreDesIntervales
 		indexe = -1;
 		
 		for(int i = 0;i<p->taille;i++){ // boucle sur toutes les distances
+    //printf("d[%d] = %f\tmeilleurEndroit = %f\n", i, di[i], tableauMeilleurEndroit[i]);
+    
 			if(di[i]>=0 && (min == -1 || di[i]<min) ){ // si la distance est valide et que soit aucune distances n'a été trouvée
 				min = di[i];
 				//idmin = id[i];
@@ -357,7 +368,6 @@ int rechercher_audio(PileDescripteurAudio* p,PileLien* l,int nombreDesIntervales
     // char* getNomDescripteurAudio(DescripteurAudio d)
     char* nomDescripteurCourant;
     nomDescripteurCourant = getNomDescripteurAudio(*getDescripteurAudioViaId(*p,id[indexe]));
-    //printf("Descripteur courant = %s\n",nomDescripteurCourant);
     if (strcmp(nomDescripteurCourant, nom)!=0){
 			char nom_sans_extension[50] = "";
       strncat(nom_sans_extension, getNomDescripteurAudio(*getDescripteurAudioViaId(*p,id[indexe])),strlen(getNomDescripteurAudio(*getDescripteurAudioViaId(*p,id[indexe])))-4);
@@ -366,12 +376,17 @@ int rechercher_audio(PileDescripteurAudio* p,PileLien* l,int nombreDesIntervales
 				id_fichier_a_ouvrir = indexe;
 			}
       
-      //printf("######### indexe = %d\n######### nom = %s\n", indexe, getNomDescripteurAudio(*getDescripteurAudioViaId(*p,id[indexe])));
-      printf("    L'endroit le plus pertinant est : %.2f seconde(s)\n", tableauMeilleurEndroit[indexe]);
+      if (tableauMeilleurEndroit[indexe]<60){
+        printf("    L'endroit le plus pertinant est : %.2f seconde(s)\n", tableauMeilleurEndroit[indexe]);
       nb_resultatsAffiches++;
+      }
+      else {
+        int minutes = tableauMeilleurEndroit[indexe]/60;
+        printf("    L'endroit le plus pertinant est : %d minute(s) et %.2f seconde(s)\n", minutes, tableauMeilleurEndroit[indexe]-minutes*60);
+      nb_resultatsAffiches++;
+      }
     }
     else{
-      //printf("\nLe fichier recherche --> %s n'est pas affiche\n\n",nomDescripteurCourant);
       if(nb_resultatsNegliges==0){
 				id_fichier_a_ouvrir = indexe;
 			}
@@ -380,8 +395,8 @@ int rechercher_audio(PileDescripteurAudio* p,PileLien* l,int nombreDesIntervales
 		di[indexe] = -1;
 	}
 
-  // affichage de fichier audio
-  //bool ouverture = true;
+  // $$$$$ affichage de fichier audio $$$$$
+  
   char commandeAfficherAudio[80] = "play ./data/TEST_SON/";
   int lenghtNom = strlen(getNomDescripteurAudio(*getDescripteurAudioViaId(*p,id_fichier_a_ouvrir)));
     // if nom est conntenue dans base de recherche --> afficher le fichier de base de recherche a partir de 0:0 (car on cherche le meme fichier!)
@@ -389,33 +404,42 @@ int rechercher_audio(PileDescripteurAudio* p,PileLien* l,int nombreDesIntervales
   strncat(cheminAudio, nom,lenghtNom-3);
   strcat(cheminAudio,"wav");
   //printf("cheminAudio = %s\n", cheminAudio);
-  char play[80] = "play ";
-  if (access(cheminAudio, F_OK)==0){
+  //char play[80] = "play ";
+  /*if (access(cheminAudio, F_OK)==0){
     //printf("Audio existe dans la base de donnee!\n");
     // on affiche le meme fichier sans trim
-    strcat(commandeAfficherAudio, getNomDescripteurAudio(*getDescripteurAudioViaId(*p,id_fichier_a_ouvrir)));
+    //strcat(commandeAfficherAudio, getNomDescripteurAudio(*getDescripteurAudioViaId(*p,id_fichier_a_ouvrir)));
+    strncat(commandeAfficherAudio, getNomDescripteurAudio(*getDescripteurAudioViaId(*p,id_fichier_a_ouvrir)),lenghtNom-3);
+    strcat(commandeAfficherAudio,"wav trim ");
     printf("\nExecution de : %s\n",commandeAfficherAudio);
   }
-  else {
+  else {*/
     strncat(commandeAfficherAudio, getNomDescripteurAudio(*getDescripteurAudioViaId(*p,id_fichier_a_ouvrir)),lenghtNom-3);
     strcat(commandeAfficherAudio,"wav trim ");
     char result[50]; 
     float num = tableauMeilleurEndroit[id_fichier_a_ouvrir];
-    int num1 = (int) num/60;
     int num2 = (int) num;
     while (num2>=60){
       num2-=60;
     }
+    // trim pour les heures ??? 
+    if (num>=3600){
+      sprintf(result, "%d:", (int)num/3600);
+    }
     sprintf(result, "%d:%d", (int)num/60, num2); 
     strcat(commandeAfficherAudio, result);
-  	printf("\nExecution de : %s\n",commandeAfficherAudio);
-  }
-  //if (ouverture){
-    //printf("\nCommande qu'on passera au system : %s\n", commandeAfficherAudio);
-    //system(commandeAfficherAudio);
-    // commande "play" --> lancer le fichier
-    // trim
-  //}
+    
+    int ouvert=-1;
+    do {
+      printf("\nVoulez-vous ecuter le fichier %s ?\nSi oui, tapez 1, sinon tapez 2 : ", getNomDescripteurAudio(*getDescripteurAudioViaId(*p,id_fichier_a_ouvrir)));
+      scanf("%d", &ouvert);
+    } while (ouvert!=1 && ouvert!=2);
+  	
+  	if (ouvert==1){
+  	  printf("\nExecution de : system(%s);\n",commandeAfficherAudio);
+  	  // system(commandeAfficherAudio);
+  	}
+  	
   
   // ********************
 
@@ -489,7 +513,7 @@ int indexation_fichiers_textes(PileDescripteurTexte* p,PileLien* l,int nmb_mots,
 int rechercher_texte(PileDescripteurTexte* p,PileLien* l,int n_mots,int n_resultats){
 	//bool ajoute_par_utilisateur = false;
 	char nom[100];
-	printf("Entrez le nom de votre fichier :");
+	printf("Entrez le nom de votre fichier : ");
 	scanf("%s",nom);
 	strcat(nom,".xml");
 	
@@ -589,7 +613,7 @@ int rechercher_mots_texte(PileDescripteurTexte* p,int n_resultats){
   int i;
   int j;
   
-	printf("Entrez le mot :");
+	printf("Entrez le mot : ");
 	scanf("%s",motLu);
 	
 	/* Traitement du mot */

@@ -1,3 +1,4 @@
+// Bastian : Fichier de test unitaire de la pile de liens.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,7 +7,7 @@
 
 
 int main(int argc, char* argv[]){
-	PileLien p = chargePileLien("Temp");
+	PileLien p = chargePileLien("base_donnee");
 	affichePileLien(p);
 
 	/*

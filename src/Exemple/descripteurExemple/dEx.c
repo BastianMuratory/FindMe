@@ -6,7 +6,7 @@
 
 /*
 typedef struct s_DescripteurExemple{
-	char nom[50];
+	char nom[TAILLE_NOM+1];
 	int id;
 }DescripteurExemple;
 */
@@ -15,7 +15,7 @@ typedef struct s_DescripteurExemple{
 // Creation du descripteur
 DescripteurExemple creerDecripteurDuExemple(char nomDuFichier[50]){
 	DescripteurExemple d;
-	char nom[50];
+	char nom[TAILLE_NOM+1];
 	strcpy(nom,nomDuFichier);
 	nom[strlen(nom) - 4] = '\0';
 	strcpy(d.nom,nomDuFichier);
@@ -28,7 +28,7 @@ int getIdDescripteurExemple(DescripteurExemple d){
 	return d.ID;
 }
 char* getNomDescripteurExemple(DescripteurExemple d){
-	char* nom = malloc(50*sizeof(char));
+	char* nom = malloc((TAILLE_NOM+1)*sizeof(char));
 	strcpy(nom,d.nom);
 	return nom;
 }

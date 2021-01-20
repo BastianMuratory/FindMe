@@ -3,6 +3,15 @@
 
 #include <stdbool.h>
 
+#define TAILLE_MAX 100
+
+#define MIN_INDEXATION_AUDIO 10
+#define MAX_INDEXATION_AUDIO 250
+#define MIN_INDEXATION_IMAGE 1
+#define MAX_INDEXATION_IMAGE 7
+#define MIN_INDEXATION_TEXTE 1
+#define MAX_INDEXATION_TEXTE 1000
+
 void clear (void);
 
 void color(char* couleur);

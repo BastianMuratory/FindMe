@@ -1,11 +1,11 @@
 #ifndef __DescripteurExemple_h__
 #define __DescripteurExemple_h__
 
-
+#define TAILLE_NOM 100
 
 typedef struct s_DescripteurExemple{
 	int ID; // ID du descripteur
-	char nom[50]; // nom du fichier decrit
+	char nom[TAILLE_NOM+1]; // nom du fichier decrit
 }DescripteurExemple;
 
 // Creation du descripteur

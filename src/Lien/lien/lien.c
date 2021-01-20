@@ -1,3 +1,4 @@
+// Bastian : fonction permettant d'utiliser un Lien 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -11,7 +12,7 @@ typedef struct s_Lien{
 }Lien;
 */
 
-// Creation du descripteur
+// Creation du Lien
 Lien creerLien(char* nomDuFichier,int ID){
 	Lien l;
 	strcpy(l.nomFichier,nomDuFichier);
@@ -25,26 +26,29 @@ int getIdLien(Lien d){
 }
 
 char* getNomLien(Lien d){
-	char* retour = malloc(100*sizeof(char));
+	char* retour = malloc((TAILLE_MAX+1)*sizeof(char));
 	strcat(retour,d.nomFichier);
 	return retour;
 }
 
-//affectation et copie
+//affectation
 void affectLien(Lien* e,Lien* x){
 	strcpy(x->nomFichier,e->nomFichier);
 	x->ID = e->ID;
 }
 
+// affichage d'un lien
 void afficheLien(Lien d){
 	printf("Le texte %s est lié au descripteur %d\n",d.nomFichier,d.ID);
 }
 
+// sauvegarde d'un lien dans un fichier
 int sauvegarderLien(FILE* fichier,Lien d){
 	fprintf(fichier,"%d,%s\n",d.ID,d.nomFichier);
 	return 0;
 }
 
+// chargement d'un lien dans un fichier
 Lien chargerLien(FILE* fichier){
 	Lien d;
 	fscanf(fichier, "%d,%s\n",&d.ID,d.nomFichier);

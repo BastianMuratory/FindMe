@@ -1,9 +1,11 @@
 #ifndef __DescripteurAudio_h__
 #define __DescripteurAudio_h__
 
+#define TAILLE_MAX 100
+
 typedef struct s_DescripteurAudio {
 	int ID; // ID du descripteur
-	char nom[50]; // nom du fichier decrit
+	char nom[TAILLE_MAX+1]; // nom du fichier decrit
 	int nombreDesIntervalles;	
 	int tailleDuDescripteur; // variable contenant le nombre de ligne d'histogramme (=nombre de lignes du fichier)
 	int** histogramme; // matrice contenant l'histogramme

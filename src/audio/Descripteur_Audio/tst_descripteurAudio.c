@@ -9,13 +9,13 @@ int main(int argc, char *argv[]) {
 	bool test_Moumouni = true;
   
 	if(test_Moumouni){
-			// debut test
-				int i, j;
+		// debut test
+		int i, j;
 		float *endroitDisntaceMin;
 		puts("TEST 0");
 		DescripteurAudio b = creerDescripteurAudioBin("corpus_fi.bin", 50, 2);
     
-    afficheDescripteurAudio(b);
+  	afficheDescripteurAudio(b);
 
 		puts("TEST A");
 		//* ******* TEST DISTANCE ***

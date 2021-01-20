@@ -1,7 +1,7 @@
 # Bastian : Permet de compiler tout les modules et d'exécuter le main, Le clean permet de supprimer les fichiers objets et l'executable
 O = ./Objet/
 
-Objet = $(O)lien.o $(O)liens.o $(O)descripteurAudio.o $(O)audio.o $(O)descripteurTexte.o $(O)texte.o $(O)descripteurImage.o $(O)image.o $(O)main.o $(O)fonction.o $(O)pile_dossier.o $(O)chargement.o $(O)indexation.o
+Objet = $(O)lien.o $(O)liens.o $(O)descripteurAudio.o $(O)audio.o $(O)descripteurTexte.o $(O)texte.o $(O)descripteurImage.o $(O)image.o $(O)main.o $(O)fonction.o $(O)chargement.o $(O)indexation.o
 
 run: fonction.o chargement.o liens.o audio.o texte.o image.o indexation.o
 	gcc -o $(O)main.o -c main.c 
@@ -13,36 +13,34 @@ fonction.o: src/FonctionMain/fonction.c src/FonctionMain/fonction.h
 	gcc -o $(O)fonction.o -c -Wall src/FonctionMain/fonction.c
 
 #Fonction pour charger les fichiers config
-chargement.o: pile_dossier.o src/chargement/chargement.c src/chargement/chargement.h
+chargement.o: src/chargement/chargement.c src/chargement/chargement.h
 	gcc -o $(O)chargement.o -c -Wall src/chargement/chargement.c
 
-#utilisé par chargement.c pour avor une pile de char* (liste de nom de dossiers)
-pile_dossier.o: src/chargement/Pile/pile_dossier.c src/chargement/Pile/pile_dossier.h
-	gcc -o $(O)pile_dossier.o -c -Wall src/chargement/Pile/pile_dossier.c
-
-
-# Fichiers texte
+# ====== Fichiers texte ======
 texte.o: descripteurTexte.o src/texte/texte.c  src/texte/texte.h
 	gcc -o $(O)texte.o -c -Wall src/texte/texte.c
 
 descripteurTexte.o: src/texte/Descripteur_Texte/descripteurTexte.c src/texte/Descripteur_Texte/descripteurTexte.h
 	gcc -o $(O)descripteurTexte.o -c -Wall src/texte/Descripteur_Texte/descripteurTexte.c
+# ============================
 
-# Fichiers image
+# ------ Fichiers image ------
 image.o: descripteurImage.o src/image/image.c  src/image/image.h
 	gcc -o $(O)image.o -c -Wall src/image/image.c
 
 descripteurImage.o: src/image/Descripteur_Image/descripteurImage.c src/image/Descripteur_Image/descripteurImage.h
 	gcc -o $(O)descripteurImage.o -c -Wall src/image/Descripteur_Image/descripteurImage.c
+# ----------------------------
 
-# Fichiers Audio
+# ~~~~~~ Fichiers Audio ~~~~~~
 audio.o: descripteurAudio.o src/audio/audio.c  src/audio/audio.h
 	gcc -o $(O)audio.o -c -Wall src/audio/audio.c
 
 descripteurAudio.o: src/audio/Descripteur_Audio/descripteurAudio.c src/audio/Descripteur_Audio/descripteurAudio.h
 	gcc -o $(O)descripteurAudio.o -c -Wall src/audio/Descripteur_Audio/descripteurAudio.c
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# Liens entre descripteur et nom 
+# Liens entre descripteur et nom de fichier 
 liens.o: lien.o src/Lien/liens.c src/Lien/liens.h
 	gcc -o $(O)liens.o -c -Wall src/Lien/liens.c
 

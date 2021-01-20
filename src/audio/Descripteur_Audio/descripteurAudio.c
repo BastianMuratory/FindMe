@@ -8,7 +8,7 @@
 /*
 typedef struct s_DescripteurAudio {
 	int ID;
-	char nom[50];
+	char nom[TAILLE_MAX+1];
 	int nombreDesIntervalles;
 	int tailleDuDescripteur;
 	int** histogramme;
@@ -18,19 +18,10 @@ typedef struct s_DescripteurAudio {
 
 ///Fonction Taille fichier binaire
 unsigned long tailleFichierBin(FILE *ficbin){
-  
-
   fseek(ficbin,0,SEEK_END);
-  
   unsigned long  taille= ftell(ficbin);
-  
   return taille;
-
 }
-
-
-
-
 
 
 DescripteurAudio creerDescripteurAudioBin(char nomDuFichier[50],int nombreDesIntervalles, int id){
@@ -43,7 +34,7 @@ DescripteurAudio creerDescripteurAudioBin(char nomDuFichier[50],int nombreDesInt
     d.nombreDesIntervalles = nombreDesIntervalles;
   	d.tailleDuDescripteur = 0;
 
-    char maCommande[80] = "wc -l ../../../data/TEST_SON/";
+    char maCommande[TAILLE_MAX+1] = "wc -l ../../../data/TEST_SON/";
 	  strcat(maCommande,d.nom); 
     //   ./data/TEST_SON/ --> pour compiler depuis le main
 
@@ -81,7 +72,7 @@ DescripteurAudio creerDescripteurAudioBin(char nomDuFichier[50],int nombreDesInt
  
 	//puts("F");
 	//lecture du fichier audio
-	char chemin[80] = "../../../data/TEST_SON/";
+	char chemin[TAILLE_MAX+1] = "../../../data/TEST_SON/";
 	//system("")
 	strcat(chemin,nomDuFichier);
 
@@ -216,9 +207,9 @@ DescripteurAudio creerDescripteurAudio(char nomDuFichier[50],int nombreDesInterv
 	d.tailleDuDescripteur = 0;
 
   // creation de la commande pour ouvrir le fichier txt (depuis src/audio)
-  char maCommande[80] = "wc -l ./data/TEST_SON/";
+  char maCommande[TAILLE_MAX+1] = "wc -l ./data/TEST_SON/";
   // depuis src/audio/DescripteurAudio
-	//char maCommande[80] = "wc -l ../../../data/TEST_SON/";
+	//char maCommande[TAILLE_MAX+1] = "wc -l ../../../data/TEST_SON/";
 	strcat(maCommande,d.nom);
 	// cette fonction ^ rajoute le char* d.nom à la fin du char* maCommande 
 	strcat(maCommande," > Temp");
@@ -269,7 +260,7 @@ DescripteurAudio creerDescripteurAudio(char nomDuFichier[50],int nombreDesInterv
 	}
 
 	//lecture du fichier audio
-	char chemin[80] = "./data/TEST_SON/";
+	char chemin[TAILLE_MAX+1] = "./data/TEST_SON/";
 
 	strcat(chemin,nomDuFichier);
 	fichier = NULL;
@@ -323,7 +314,7 @@ int getIdDescripteurAudio(DescripteurAudio d){
 	return d.ID;
 }
 char* getNomDescripteurAudio(DescripteurAudio d){
-  char* nom = malloc(50*sizeof(char));
+  char* nom = malloc((TAILLE_MAX+1)*sizeof(char));
 	strcpy(nom,d.nom);
 	return nom;
 }
@@ -460,19 +451,21 @@ float distanceDescripteurAudio(DescripteurAudio* d1, DescripteurAudio* d2, float
   float min = 1000000000;
   /* comparaison de nombre des intervalles de chaque descripteur */
   if (d1->nombreDesIntervalles!= d2->nombreDesIntervalles){
-    printf("\n\n\n&&&&& Il faut mettre a jour l'indexation ! &&&&&\n\n\n");
+    printf("\n\n\n&&&&&5 Il faut mettre a jour l'indexation ! &&&&&\n\n\n");
     EXIT_FAILURE; 
   }
   
   start = 0;
   // d1 plus petit | d2 plus grand
-  if  (d2->tailleDuDescripteur >= d1->tailleDuDescripteur){
-    for(i=0; (i < d2->tailleDuDescripteur/n) && (start + d1->tailleDuDescripteur <= d2->tailleDuDescripteur) ; i++){
+  if  (d2->tailleDuDescripteur > d1->tailleDuDescripteur){ 
+    //printf("1 #########################\n%s est plus grand que %s\n", d2->nom, d1->nom);
+    for(i=0; (start + d1->tailleDuDescripteur <= d2->tailleDuDescripteur); i++){
+    //for(i=0; (i*n < d2->tailleDuDescripteur) && (start + d1->tailleDuDescripteur <= d2->tailleDuDescripteur) ; i++){
       /* on calcule le decalage du plus grand fichier */
       start=n*i;
       
       // affichage de start, distance, min apres chaque itteration
-      //printf("%d : start = %d   distance = %d    min = %d\n",i,start, distance, min);
+      //printf("%d : start = %d   distance = %f    min = %f\n",i,start, distance, min);
       /* on verifie si le distance est minimal */
       if (distance<min){
         min=distance;
@@ -508,10 +501,12 @@ float distanceDescripteurAudio(DescripteurAudio* d1, DescripteurAudio* d2, float
   }
   // d1 plus grand | d2 plus petit
   else {
-    for(i=0; (i <= d1->tailleDuDescripteur/n) && (start+d2->tailleDuDescripteur < d1->tailleDuDescripteur); i++){
+    //printf("2 #########################\n%s est plus grand que %s\n", d1->nom, d2->nom);
+    for(i=0; (start+d2->tailleDuDescripteur <= d1->tailleDuDescripteur); i++){
+      //for(i=0; (i*n < d1->tailleDuDescripteur) && (start+d2->tailleDuDescripteur < d1->tailleDuDescripteur); i++){
       start=n*i;
       
-      //printf("%d : start = %d   distance = %d    min = %d\n",i,start, distance, min);
+      //printf("%d : start = %d\tdistance = %f\tmin = %f\n",i,start, distance, min);
       if (distance<min){
         min=distance;
         endroitDistanceMin=i-1;
@@ -520,7 +515,7 @@ float distanceDescripteurAudio(DescripteurAudio* d1, DescripteurAudio* d2, float
       distance=0;
       for (int j=0; j < d2->tailleDuDescripteur ; j++){
         if ( (start+j)>d1->tailleDuDescripteur){
-          diffEndroit += 5*(d2->tailleDuDescripteur-j);
+          diffEndroit += d2->tailleDuDescripteur-j;
           distance+=diffEndroit;
           //printf("!!!!!!!! BREAK !!!!!!!!!!\n");
           break;
@@ -539,9 +534,12 @@ float distanceDescripteurAudio(DescripteurAudio* d1, DescripteurAudio* d2, float
     distance = min;
     distance = (distance / (d2->nombreDesIntervalles/2*d2->tailleDuDescripteur)) * 100;
   }
-  endroitDistanceMin = endroitDistanceMin * n/16384;
+ 
   /* recuperation de l'endroit ou la distance est min dans un poiteur passe en parametre */
-  *endroitLePlusPertinant = endroitDistanceMin;
+  *endroitLePlusPertinant = endroitDistanceMin * n/16384;
+  if((d2->tailleDuDescripteur < d1->tailleDuDescripteur) && (*endroitLePlusPertinant > (d1->tailleDuDescripteur/16384))) {
+    *endroitLePlusPertinant=0;
+  }
 	return distance;
 }
 

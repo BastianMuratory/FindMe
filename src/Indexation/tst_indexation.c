@@ -24,7 +24,7 @@ int main(){
 		bool charge = true;
 		bool sauvegarde = true;
 		if(charge){
-			p = chargePileDescripteurImage(2,&id);
+			p = chargePileDescripteurImage(&id);
 			l = chargePileLien
 			("../../sauvegarde/Descripteur_image/liste_base_image");
 		}else{
